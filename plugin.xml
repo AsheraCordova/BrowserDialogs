@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+        id="cordova-plugin-dialogs-ashera"
+        version="1.0">
+
+  <name>Splash Plugin</name>
+
+  <platform name="swt">
+  	<config-file target="res/xml/config.xml" parent="/*">
+            <feature name="Notification">
+                <param name="android-package" value="org.apache.cordova.dialogs.Notification"/>
+            </feature>
+    </config-file>
+	
+	<source-file src="swt/src/main/java/org/apache/cordova/dialogs/Notification.java" target-dir="src/org/apache/cordova/dialogs" />
+	<source-file src="swt/src/main/java/org/apache/cordova/dialogs/DialogArea.java" target-dir="src/org/apache/cordova/dialogs" />
+	<source-file src="swt/src/main/java/org/apache/cordova/dialogs/FooterArea.java" target-dir="src/org/apache/cordova/dialogs" />
+	<source-file src="swt/src/main/java/org/apache/cordova/dialogs/MessageArea.java" target-dir="src/org/apache/cordova/dialogs" />
+	<source-file src="swt/src/main/java/org/apache/cordova/dialogs/ReadOnlyStyledText.java" target-dir="src/org/apache/cordova/dialogs" />
+	<source-file src="swt/src/main/java/org/apache/cordova/dialogs/SWTGraphicUtil.java" target-dir="src/org/apache/cordova/dialogs" />
+	<source-file src="swt/src/main/java/org/apache/cordova/dialogs/Dialog.java" target-dir="src/org/apache/cordova/dialogs" />
+	
+  </platform>
+</plugin>
