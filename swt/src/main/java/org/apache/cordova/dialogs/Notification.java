@@ -216,7 +216,7 @@ public class Notification extends CordovaPlugin {
 
                 int index = Dialog.buildConfirmDialog(shell, title, message, labels.toArray(new String[0])).show();
                 shell.dispose();
-                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, buttonLabels.length() - index - 1));
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, index + 1));
             };
         };
         this.cordova.getActivity().runOnUiThread(runnable);
