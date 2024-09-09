@@ -89,7 +89,13 @@ public class Notification extends CordovaPlugin {
             this.beep(args.getLong(0));
         }
         else if (action.equals(ACTION_ALERT)) {
-            this.alert(args.getString(0), args.getString(1), args.getString(2), callbackContext);
+        	String message = null;
+        	if (!args.get(0).equals(JSONObject.NULL)) {
+        		message = args.getString(0);
+        	} else {
+        		message = "null";
+        	}
+            this.alert(message, args.getString(1), args.getString(2), callbackContext);
             return true;
         }
         else if (action.equals(ACTION_CONFIRM)) {
@@ -216,7 +222,7 @@ public class Notification extends CordovaPlugin {
 
                 int index = Dialog.buildConfirmDialog(shell, title, message, labels.toArray(new String[0])).show();
                 shell.dispose();
-                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, index + 1));
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, buttonLabels.length() - index - 1));
             };
         };
         this.cordova.getActivity().runOnUiThread(runnable);
