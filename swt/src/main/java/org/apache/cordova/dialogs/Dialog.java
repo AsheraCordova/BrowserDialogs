@@ -24,7 +24,7 @@ public class Dialog {
 		CENTER_ON_SCREEN, CENTER_ON_DIALOG
 	}
 
-	private CenterOption centerPolicy = CenterOption.CENTER_ON_SCREEN;
+	private CenterOption centerPolicy = CenterOption.CENTER_ON_DIALOG;
 
 	private String title;
 	OpalDialogType buttonType;
@@ -72,7 +72,7 @@ public class Dialog {
 		if (parent == null) {
 			shell = new Shell(Display.getCurrent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | (resizable ? SWT.RESIZE : SWT.NONE));
 		} else {
-			shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | (resizable ? SWT.RESIZE : SWT.NONE));
+			shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.SHEET | (resizable ? SWT.RESIZE : SWT.NONE));
 			if (parent.getImage() != null) {
 				shell.setImage(parent.getImage());
 			}

@@ -176,10 +176,8 @@ public class Notification extends CordovaPlugin {
     public synchronized void alert(final String message, final String title, final String buttonLabel, final CallbackContext callbackContext) {
         Runnable runnable = new Runnable() {
             public void run() {
-            	final Display display = Display.getDefault();
-        		final Shell shell = new Shell(display);
+            	final Shell shell = com.ashera.common.ShellManager.getInstance().getActiveShell();
             	Dialog.buildAlertDialog(shell, title, message, buttonLabel).show();
-            	shell.dispose();
             	callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, 0));
             };
         };
@@ -200,8 +198,7 @@ public class Notification extends CordovaPlugin {
 
         Runnable runnable = new Runnable() {
             public void run() {
-            	final Display display = Display.getDefault();
-        		final Shell shell = new Shell(display);
+        		final Shell shell = com.ashera.common.ShellManager.getInstance().getActiveShell();
             	java.util.List<String> labels = new ArrayList<>();
             	
                 // First button
@@ -221,7 +218,6 @@ public class Notification extends CordovaPlugin {
                 
 
                 int index = Dialog.buildConfirmDialog(shell, title, message, labels.toArray(new String[0])).show();
-                shell.dispose();
                 callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, buttonLabels.length() - index - 1));
             };
         };
@@ -244,8 +240,7 @@ public class Notification extends CordovaPlugin {
     public synchronized void prompt(final String message, final String title, final JSONArray buttonLabels, final String defaultText, final CallbackContext callbackContext) {
         Runnable runnable = new Runnable() {
             public void run() {
-            	final Display display = Display.getDefault();
-        		final Shell shell = new Shell(display);
+            	final Shell shell = com.ashera.common.ShellManager.getInstance().getActiveShell();
             	java.util.List<String> labels = new ArrayList<>();
             	
                 // First button
@@ -266,7 +261,6 @@ public class Notification extends CordovaPlugin {
 
                 Dialog dialog = Dialog.buildAskDialog(shell, title, message, defaultText, labels.toArray(new String[0]));
 				int index = dialog.show();
-                shell.dispose();
                 final JSONObject result = new JSONObject();
                 result.put("buttonIndex",buttonLabels.length() - index - 1);
                 String promptText = dialog.getMessageArea().getTextBoxValue();
