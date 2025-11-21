@@ -1,12 +1,21 @@
-package org.apache.cordova.dialogs;
+//start - license
+/*******************************************************************************
+ * Copyright (c) 2025 Ashera Cordova
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *******************************************************************************/
+//end - license
+package org.eclipse.nebula.widgets.opal.dialog;
 
 import java.io.File;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Resource;
-import org.eclipse.swt.internal.win32.OS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
@@ -54,4 +63,9 @@ public class SWTGraphicUtil {
 			return new Image(Display.getCurrent(), //
 					SWTGraphicUtil.class.getResourceAsStream(fileName));
 		}
-	}}
+	}
+
+	public static void applyHTMLFormating(StyledText label) {
+		
+	}
+}

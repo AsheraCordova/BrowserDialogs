@@ -1,5 +1,30 @@
-package org.apache.cordova.dialogs;
+//start - license
+/*******************************************************************************
+ * Copyright (c) 2025 Ashera Cordova
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *******************************************************************************/
+//end - license
+/*******************************************************************************
+ * Copyright (c) 2011-2019 Laurent CARON
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors: 
+ * 	Laurent CARON (laurent.caron at gmail dot com) - Initial implementation
+ *  Stefan Nöbauer - Bug 550437 
+ *******************************************************************************/
+package org.eclipse.nebula.widgets.opal.dialog;
 
+//import org.eclipse.nebula.widgets.opal.commons.ReadOnlyStyledText;
+//import org.eclipse.nebula.widgets.opal.commons.SWTGraphicUtil;
+//import org.eclipse.nebula.widgets.opal.commons.StringUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -20,7 +45,7 @@ import org.eclipse.swt.widgets.Text;
  * Instances of this class are message areas
  */
 public class MessageArea extends DialogArea {
-	private static final int INDENT_NO_ICON = 0;
+	private static final int INDENT_NO_ICON = 8;
 	private static final int DEFAULT_MARGIN = 10;
 
 	// Main composite
@@ -31,8 +56,22 @@ public class MessageArea extends DialogArea {
 	private Image icon;
 	private String text;
 
+	// Informations for a radio choice dialog box
+	private int radioChoice;
+	private int radioDefaultSelection;
+	private String[] radioValues;
+
+	// Informations for a exception viewer dialog box
+	private Throwable exception;
+	private Text textException;
+
 	// Informations for an input dialog box
 	private String textBoxValue;
+
+	// Informations for a choice dialog box
+	private int choice;
+	private int choiceDefaultSelection;
+	private ChoiceItem[] choiceValues;
 
 	// Informations for a progress bar displayed in a dialog box
 	private ProgressBar progressBar;
@@ -56,7 +95,37 @@ public class MessageArea extends DialogArea {
 	 */
 	public MessageArea(final Dialog parent) {
 		super(parent);
+		radioChoice = -1;
+		choice = -1;
 		progressBarValue = -1;
+	}
+
+	/**
+	 * Add a choice
+	 *
+	 * @param defaultSelection default selection
+	 * @param items a list of the choice item
+	 * @return the current message area
+	 */
+	public MessageArea addChoice(final int defaultSelection, final ChoiceItem... items) {
+		setInitialised(true);
+		choiceDefaultSelection = defaultSelection;
+		choiceValues = items;
+		return this;
+	}
+
+	/**
+	 * Add a choice composed of radio buttons
+	 *
+	 * @param defaultSelection default selection
+	 * @param values values
+	 * @return the current message area
+	 */
+	public MessageArea addRadioButtons(final int defaultSelection, final String... values) {
+		setInitialised(true);
+		radioDefaultSelection = defaultSelection;
+		radioValues = values;
+		return this;
 	}
 
 	/**
@@ -115,14 +184,29 @@ public class MessageArea extends DialogArea {
 		composite.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		
 		final boolean hasIcon = icon != null;
-		final boolean hasTitle = !isEmpty(title);
-		final boolean hasText = !isEmpty(text);
+		final boolean hasTitle = !StringUtil.isEmpty(title);
+		final boolean hasText = !StringUtil.isEmpty(text);
+		final boolean hasRadio = radioValues != null;
+		final boolean hasException = exception != null;
 		final boolean hasTextbox = textBoxValue != null;
+		final boolean hasChoice = choiceValues != null;
 		final boolean hasProgressBar = progressBarValue != -1;
-		final boolean hasCheckbox = !isEmpty(checkBoxLabel);
+		final boolean hasCheckbox = !StringUtil.isEmpty(checkBoxLabel);
 
 		final int numberOfColumns = hasIcon ? 2 : 1;
 		int numberOfRows = hasTitle && hasText ? 2 : 1;
+
+		if (hasRadio) {
+			numberOfRows += radioValues.length;
+		}
+
+		if (hasChoice) {
+			numberOfRows += choiceValues.length;
+		}
+
+		if (hasException || hasTextbox) {
+			numberOfRows++;
+		}
 
 		if (hasProgressBar) {
 			numberOfRows++;
@@ -148,8 +232,20 @@ public class MessageArea extends DialogArea {
 			createText(hasIcon, hasTitle);
 		}
 
+		if (hasRadio) {
+			createRadioButtons();
+		}
+
+		if (hasException) {
+			createTextException();
+		}
+
 		if (hasTextbox) {
 			createTextBox();
+		}
+
+		if (hasChoice) {
+			createChoice();
 		}
 
 		if (hasProgressBar) {
@@ -174,10 +270,6 @@ public class MessageArea extends DialogArea {
 			createCheckBox();
 		}
 
-	}
-
-	private boolean isEmpty(String title) {
-		return title == null || title.isEmpty();
 	}
 
 	/**
@@ -223,6 +315,7 @@ public class MessageArea extends DialogArea {
 		label = new ReadOnlyStyledText(composite, SWT.NONE | (verticalScrollbar ? SWT.V_SCROLL : SWT.NONE));
 		label.setText(text);
 		
+		SWTGraphicUtil.applyHTMLFormating(label);
 		label.setEditable(false);
 		final GridData gd = new GridData(GridData.FILL, GridData.FILL, true, false, 1, 1);
 		if (height != -1) {
@@ -241,6 +334,39 @@ public class MessageArea extends DialogArea {
 		}
 
 		label.setLayoutData(gd);
+	}
+
+	/**
+	 * Create radio buttons
+	 */
+	private void createRadioButtons() {
+		for (int i = 0; i < radioValues.length; i++) {
+			final Button button = new Button(composite, SWT.RADIO);
+			button.setText(radioValues[i]);
+
+			final Integer index = Integer.valueOf(i);
+			button.addListener(SWT.Selection, e -> {
+				if (button.getSelection()) {
+					radioChoice = index.intValue();
+				}
+			});
+
+			button.setSelection(i == radioDefaultSelection);
+			final GridData gd = new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false, 1, 1);
+			gd.horizontalIndent = DEFAULT_MARGIN;
+			button.setLayoutData(gd);
+		}
+	}
+
+	/**
+	 * Create the text that displays an exception
+	 */
+	private void createTextException() {
+		textException = new Text(composite, SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		textException.setText(StringUtil.stackStraceAsString(exception));
+		textException.setBackground(composite.getBackground());
+		final GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1);
+		textException.setLayoutData(gd);
 	}
 
 	/**
@@ -275,6 +401,34 @@ public class MessageArea extends DialogArea {
 	}
 
 	/**
+	 * Create a choice selection
+	 */
+	private void createChoice() {
+		for (int i = 0; i < choiceValues.length; i++) {
+			final ChoiceWidget choice = new ChoiceWidget(composite, SWT.RADIO);
+			choice.setChoiceItem(choiceValues[i]);
+
+			final Integer index = Integer.valueOf(i);
+			choice.addSelectionListener(new SelectionAdapter() {
+
+				/**
+				 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+				 */
+				@Override
+				public void widgetSelected(final SelectionEvent e) {
+					MessageArea.this.choice = index.intValue();
+					MessageArea.this.parent.shell.dispose();
+				}
+
+			});
+
+			choice.setSelection(i == choiceDefaultSelection);
+			final GridData gd = new GridData(GridData.FILL, GridData.FILL, false, false, 1, 1);
+			choice.setLayoutData(gd);
+		}
+	}
+
+	/**
 	 * Create a progress bar
 	 */
 	private void createProgressBar() {
@@ -301,6 +455,36 @@ public class MessageArea extends DialogArea {
 		});
 	}
 	
+	/**
+	 * Hide the exception panel
+	 */
+	void hideException() {
+		Point size = parent.shell.getSize();
+		
+		textException.setVisible(false);
+		((GridData)textException.getLayoutData()).exclude = true;
+		
+		parent.shell.setMinimumSize(new Point(0,0));
+		parent.shell.layout();
+		parent.pack();
+		parent.shell.setMinimumSize(parent.shell.getSize());
+		parent.setLastSize(size);
+	}
+
+	/**
+	 * Show the exception panel
+	 */
+	void showException() {
+		if(textException == null) {
+			createTextException();
+		} else {
+			textException.setVisible(true);
+			((GridData)textException.getLayoutData()).exclude = false;
+			parent.shell.layout();
+		}
+		parent.pack();
+	}
+
 	// ------------------------------------------- Getters & Setters
 
 	/**
@@ -351,8 +535,40 @@ public class MessageArea extends DialogArea {
 		setInitialised(true);
 		if (progressBar != null && label != null && !label.isDisposed()) {
 			label.setText(text);
+			SWTGraphicUtil.applyHTMLFormating(label);
 		}
 		return this;
+	}
+
+	/**
+	 * @return the radio choice
+	 */
+	public int getRadioChoice() {
+		return radioChoice;
+	}
+
+	/**
+	 * @return the exception
+	 */
+	public Throwable getException() {
+		return exception;
+	}
+
+	/**
+	 * @param exception the exception to set
+	 * @return
+	 */
+	public MessageArea setException(final Throwable exception) {
+		this.exception = exception;
+		setInitialised(true);
+		return this;
+	}
+
+	/**
+	 * @return the choice
+	 */
+	public int getChoice() {
+		return choice;
 	}
 
 	/**

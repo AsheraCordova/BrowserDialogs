@@ -13,12 +13,16 @@
     </config-file>
 	
 	<source-file src="src/main/java/org/apache/cordova/dialogs/Notification.java" target-dir="src/org/apache/cordova/dialogs" />
-	<source-file src="src/main/java/org/apache/cordova/dialogs/DialogArea.java" target-dir="src/org/apache/cordova/dialogs" />
-	<source-file src="src/main/java/org/apache/cordova/dialogs/FooterArea.java" target-dir="src/org/apache/cordova/dialogs" />
-	<source-file src="src/main/java/org/apache/cordova/dialogs/MessageArea.java" target-dir="src/org/apache/cordova/dialogs" />
-	<source-file src="src/main/java/org/apache/cordova/dialogs/ReadOnlyStyledText.java" target-dir="src/org/apache/cordova/dialogs" />
-	<source-file src="src/main/java/org/apache/cordova/dialogs/SWTGraphicUtil.java" target-dir="src/org/apache/cordova/dialogs" />
-	<source-file src="src/main/java/org/apache/cordova/dialogs/Dialog.java" target-dir="src/org/apache/cordova/dialogs" />
-	
+	<source-file src="src/main/java/org/apache/cordova/dialogs/DialogHelper.java" target-dir="src/org/apache/cordova/dialogs" />
+	<source-file src="src/main/java/org/eclipse/nebula/widgets/opal/dialog/ChoiceItem.java" target-dir="src/org/eclipse/nebula/widgets/opal/dialog" />
+	<source-file src="src/main/java/org/eclipse/nebula/widgets/opal/dialog/ChoiceWidget.java" target-dir="src/org/eclipse/nebula/widgets/opal/dialog" />
+	<source-file src="src/main/java/org/eclipse/nebula/widgets/opal/dialog/Dialog.java" target-dir="src/org/eclipse/nebula/widgets/opal/dialog" />
+	<source-file src="src/main/java/org/eclipse/nebula/widgets/opal/dialog/DialogArea.java" target-dir="src/org/eclipse/nebula/widgets/opal/dialog" />
+	<source-file src="src/main/java/org/eclipse/nebula/widgets/opal/dialog/FooterArea.java" target-dir="src/org/eclipse/nebula/widgets/opal/dialog" />
+	<source-file src="src/main/java/org/eclipse/nebula/widgets/opal/dialog/MessageArea.java" target-dir="src/org/eclipse/nebula/widgets/opal/dialog" />
+	<source-file src="src/main/java/org/eclipse/nebula/widgets/opal/dialog/ReadOnlyStyledText.java" target-dir="src/org/eclipse/nebula/widgets/opal/dialog" />
+	<source-file src="src/main/java/org/eclipse/nebula/widgets/opal/dialog/ResourceManager.java" target-dir="src/org/eclipse/nebula/widgets/opal/dialog" />
+	<source-file src="src/main/java/org/eclipse/nebula/widgets/opal/dialog/StringUtil.java" target-dir="src/org/eclipse/nebula/widgets/opal/dialog" />
+	<source-file src="src/main/java/org/eclipse/nebula/widgets/opal/dialog/SWTGraphicUtil.java" target-dir="src/org/eclipse/nebula/widgets/opal/dialog" />
   </platform>
 </plugin>

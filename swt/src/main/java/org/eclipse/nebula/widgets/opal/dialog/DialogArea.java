@@ -1,5 +1,28 @@
-package org.apache.cordova.dialogs;
+//start - license
+/*******************************************************************************
+ * Copyright (c) 2025 Ashera Cordova
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *******************************************************************************/
+//end - license
+/*******************************************************************************
+ * Copyright (c) 2011-2019 Laurent CARON
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors: 
+ * 	Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API
+ * 	Stefan Nöbauer - Bug 550437 
+ *******************************************************************************/
+package org.eclipse.nebula.widgets.opal.dialog;
 
+//import org.eclipse.nebula.widgets.opal.commons.SWTGraphicUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;

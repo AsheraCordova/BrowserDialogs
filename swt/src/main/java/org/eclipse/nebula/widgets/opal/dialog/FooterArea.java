@@ -1,4 +1,26 @@
-package org.apache.cordova.dialogs;
+//start - license
+/*******************************************************************************
+ * Copyright (c) 2025 Ashera Cordova
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *******************************************************************************/
+//end - license
+/*******************************************************************************
+ * Copyright (c) 2011-2019 Laurent CARON
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors: 
+ *  Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API
+ *  Stefan Nöbauer - Bug 550659
+ *******************************************************************************/
+package org.eclipse.nebula.widgets.opal.dialog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,6 +29,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+//import org.eclipse.nebula.widgets.opal.commons.ResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -61,8 +84,8 @@ public class FooterArea extends DialogArea {
 	public FooterArea(final Dialog parent) {
 		super(parent);
 		selectedButtonIndex = -1;
-		expandedLabelText = "Fewer Detaiils";
-		collapsedLabelText = "More Details";
+		expandedLabelText = ResourceManager.getLabel(ResourceManager.FEWER_DETAILS);
+		collapsedLabelText = ResourceManager.getLabel(ResourceManager.MORE_DETAILS);
 		timer = -1;
 		timerIndexButton = -1;
 	}
@@ -120,6 +143,10 @@ public class FooterArea extends DialogArea {
 
 		if (buttonLabels != null) {
 			createButtons();
+		}
+
+		if (details && parent.getMessageArea().getException() == null && expanded) {
+			createExpandedPanel(numberOfColumns);
 		}
 
 		if (checkBoxLabel != null) {
@@ -213,19 +240,33 @@ public class FooterArea extends DialogArea {
 		final int numberOfColumnsParam = numberOfColumns;
 
 		final Listener listener = event -> {
-			
-			if (detailsItem.getText().equals(expandedLabelText)) {
-				detailsItem.setText(collapsedLabelText);
-				detailsItem.setImage(FooterArea.this.getMoreDetailsImage());
+			if (FooterArea.this.parent.getMessageArea().getException() != null) {
+				if (detailsItem.getText().equals(expandedLabelText)) {
+					detailsItem.setText(collapsedLabelText);
+					detailsItem.setImage(FooterArea.this.getMoreDetailsImage());
 
-				expandedPanel.dispose();
-				FooterArea.this.parent.pack();
+					FooterArea.this.parent.getMessageArea().hideException();
+				} else {
+					detailsItem.setText(expandedLabelText);
+					detailsItem.setImage(FooterArea.this.getFewerDetailsImage());
+
+					FooterArea.this.parent.getMessageArea().showException();
+				}
+
 			} else {
-				detailsItem.setText(expandedLabelText);
-				detailsItem.setImage(FooterArea.this.getFewerDetailsImage());
+				if (detailsItem.getText().equals(expandedLabelText)) {
+					detailsItem.setText(collapsedLabelText);
+					detailsItem.setImage(FooterArea.this.getMoreDetailsImage());
 
-				FooterArea.this.createExpandedPanel(numberOfColumnsParam);
-				FooterArea.this.parent.pack();
+					expandedPanel.dispose();
+					FooterArea.this.parent.pack();
+				} else {
+					detailsItem.setText(expandedLabelText);
+					detailsItem.setImage(FooterArea.this.getFewerDetailsImage());
+
+					FooterArea.this.createExpandedPanel(numberOfColumnsParam);
+					FooterArea.this.parent.pack();
+				}
 			}
 		};
 

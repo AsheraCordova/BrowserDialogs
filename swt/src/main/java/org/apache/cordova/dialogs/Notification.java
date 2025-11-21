@@ -1,3 +1,12 @@
+//start - license
+/*******************************************************************************
+ * Copyright (c) 2025 Ashera Cordova
+ *
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *******************************************************************************/
+//end - license
 /*
        Licensed to the Apache Software Foundation (ASF) under one
        or more contributor license agreements.  See the NOTICE file
@@ -28,6 +37,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.eclipse.nebula.widgets.opal.dialog.Dialog;
 
 
 /**
@@ -62,13 +72,13 @@ public class Notification extends CordovaPlugin {
 //    public ProgressDialog spinnerDialog = null;
 //    public ProgressDialog progressDialog = null;
 
-    /**
+   /**
      * Constructor.
      */
     public Notification() {
     }
 
-    /**
+   /**
      * Executes the request and returns PluginResult.
      *
      * @param action            The action to execute.
@@ -140,7 +150,7 @@ public class Notification extends CordovaPlugin {
     // LOCAL METHODS
     //--------------------------------------------------------------------------
 
-    /**
+   /**
      * Beep plays the default notification ringtone.
      *
      * @param count     Number of times to play notification
@@ -166,7 +176,7 @@ public class Notification extends CordovaPlugin {
         this.cordova.getActivity().runOnUiThread(runnable);
     }
 
-    /**
+   /**
      * Builds and shows a native Android alert with given Strings
      * @param message           The message the alert should display
      * @param title             The title of the alert
@@ -177,14 +187,14 @@ public class Notification extends CordovaPlugin {
         Runnable runnable = new Runnable() {
             public void run() {
             	final Shell shell = com.ashera.common.ShellManager.getInstance().getActiveShell();
-            	Dialog.buildAlertDialog(shell, title, message, buttonLabel).show();
+            	DialogHelper.buildAlertDialog(shell, title, message, buttonLabel).show();
             	callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, 0));
             };
         };
         this.cordova.getActivity().runOnUiThread(runnable);
     }
 
-    /**
+   /**
      * Builds and shows a native Android confirm dialog with given title, message, buttons.
      * This dialog only shows up to 3 buttons.  Any labels after that will be ignored.
      * The index of the button pressed will be returned to the JavaScript callback identified by callbackId.
@@ -217,7 +227,7 @@ public class Notification extends CordovaPlugin {
                 }
                 
 
-                int index = Dialog.buildConfirmDialog(shell, title, message, labels.toArray(new String[0])).show();
+                int index = DialogHelper.buildConfirmDialog(shell, title, message, labels.toArray(new String[0])).show();
                 callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, buttonLabels.length() - index - 1));
             };
         };
@@ -225,7 +235,7 @@ public class Notification extends CordovaPlugin {
         
     }
 
-    /**
+   /**
      * Builds and shows a native Android prompt dialog with given title, message, buttons.
      * This dialog only shows up to 3 buttons.  Any labels after that will be ignored.
      * The following results are returned to the JavaScript callback identified by callbackId:
@@ -259,7 +269,7 @@ public class Notification extends CordovaPlugin {
                 }
                 
 
-                Dialog dialog = Dialog.buildAskDialog(shell, title, message, defaultText, labels.toArray(new String[0]));
+                Dialog dialog = DialogHelper.buildAskDialog(shell, title, message, defaultText, labels.toArray(new String[0]));
 				int index = dialog.show();
                 final JSONObject result = new JSONObject();
                 result.put("buttonIndex",buttonLabels.length() - index - 1);
@@ -271,7 +281,7 @@ public class Notification extends CordovaPlugin {
         this.cordova.getActivity().runOnUiThread(runnable);
     }
 
-    /**
+   /**
      * Close previously opened dialog
      */
     public synchronized void dismissPrevious(final CallbackContext callbackContext){
@@ -283,7 +293,7 @@ public class Notification extends CordovaPlugin {
         }
     }
 
-    /**
+   /**
      * Close any open dialog.
      */
     public synchronized void dismissAll(final CallbackContext callbackContext){
@@ -298,7 +308,7 @@ public class Notification extends CordovaPlugin {
         }
     }
 
-    /**
+   /**
      * Show the spinner.
      *
      * @param title     Title of the dialog
@@ -308,14 +318,14 @@ public class Notification extends CordovaPlugin {
     	
     }
 
-    /**
+   /**
      * Stop spinner.
      */
     public synchronized void activityStop() {
     	
     }
 
-    /**
+   /**
      * Show the progress dialog.
      *
      * @param title     Title of the dialog
@@ -325,7 +335,7 @@ public class Notification extends CordovaPlugin {
     	
     }
 
-    /**
+   /**
      * Set value of progress bar.
      *
      * @param value     0-100
@@ -334,7 +344,7 @@ public class Notification extends CordovaPlugin {
     	
     }
 
-    /**
+   /**
      * Stop progress dialog.
      */
     public synchronized void progressStop() {
